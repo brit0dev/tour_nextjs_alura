@@ -13,6 +13,11 @@ export default function Post() {
         <li>
           <Link href="/">Ir para a home</Link>
         </li>
+        <li>
+          <Link href={`${router.query.id}/comentarios`}>
+            Ir para comentários
+          </Link>
+        </li>
       </ul>
     </div>
   );
