@@ -1,25 +1,22 @@
-import NextLink from "next/link";
-import { Box, Text } from "@skynexui/components";
-import { useRouter } from "next/router";
-import dados from "../../dados.json";
+import NextLink from 'next/link';
+import { Box, Text } from '@skynexui/components';
+import { useRouter } from 'next/router';
+import dados from '../../dados.json';
 
 export async function getStaticPaths() {
-  const paths = dados.posts.map((post) => {
-    return { params: { id: `${post.id}` } };
-  });
-
-  console.log("paths", paths);
-
   return {
-    paths,
-    fallback: false,
+    paths: [],
+    fallback: 'blocking',
   };
 }
 
 export async function getStaticProps(context) {
+  console.log('gerou');
   const id = context.params.id;
-
-  const post = dados.posts.find((currentPost) => currentPost.id === id);
+  const dadosDaAPI = await fetch(
+    `https://fakeapi-omariosouto.vercel.app/api/posts/${id}`
+  ).then((res) => res.json());
+  const post = dadosDaAPI;
 
   return {
     props: {
@@ -28,6 +25,7 @@ export async function getStaticProps(context) {
       date: post.date,
       content: post.content,
     },
+    revalidate: 60,
   };
 }
 
@@ -42,10 +40,10 @@ export default function PostByIdScreen(props) {
   return (
     <Box
       styleSheet={{
-        flexDirection: "column",
-        margin: "32px auto",
-        maxWidth: "700px",
-        paddingHorizontal: "16px",
+        flexDirection: 'column',
+        margin: '32px auto',
+        maxWidth: '700px',
+        paddingHorizontal: '16px',
       }}
     >
       {/* Cabeçalho */}
@@ -53,20 +51,20 @@ export default function PostByIdScreen(props) {
         variant="heading2"
         tag="h1"
         styleSheet={{
-          color: "#F9703E",
-          justifyContent: "center",
-          lineHeight: "1.2",
+          color: '#F9703E',
+          justifyContent: 'center',
+          lineHeight: '1.2',
         }}
       >
         {post.title}
       </Text>
       <Text
         styleSheet={{
-          color: "#F9703E",
-          justifyContent: "center",
-          borderBottom: "1px solid #F9703E",
-          paddingVertical: "16px",
-          marginVertical: "16px",
+          color: '#F9703E',
+          justifyContent: 'center',
+          borderBottom: '1px solid #F9703E',
+          paddingVertical: '16px',
+          marginVertical: '16px',
         }}
       >
         {post.date}
@@ -75,14 +73,14 @@ export default function PostByIdScreen(props) {
       {/* Área de Conteudo */}
       <Box
         styleSheet={{
-          flexDirection: "column",
+          flexDirection: 'column',
         }}
       >
         <Text>{post.content}</Text>
 
         {post.video && (
           <iframe
-            style={{ marginTop: "32px", minHeight: "400px" }}
+            style={{ marginTop: '32px', minHeight: '400px' }}
             src={post.video}
           />
         )}
@@ -91,14 +89,14 @@ export default function PostByIdScreen(props) {
       {/* Rodapé */}
       <Box
         styleSheet={{
-          marginTop: "16px",
-          paddingVertical: "16px",
-          borderTop: "1px solid #F9703E",
-          color: "#F9703E",
+          marginTop: '16px',
+          paddingVertical: '16px',
+          borderTop: '1px solid #F9703E',
+          color: '#F9703E',
         }}
       >
         <NextLink href="/" passHref>
-          <Text tag="a" styleSheet={{ hover: { textDecoration: "underline" } }}>
+          <Text tag="a" styleSheet={{ hover: { textDecoration: 'underline' } }}>
             Voltar para a home
           </Text>
         </NextLink>
