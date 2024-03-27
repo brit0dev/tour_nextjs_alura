@@ -1,8 +1,31 @@
 import { Box, Text, Button } from '@skynexui/components';
 import { useRouter } from 'next/router';
+import nookies from 'nookies';
 
+export async function getServerSideProps(context) {
+  const cookies = nookies.get(context);
+  console.log('Cookies', cookies);
+  const SENHA_SECRETA = '123456';
+  const senhaInformada = cookies.SENHA_SECRETA;
+  const isAutorizado = SENHA_SECRETA == senhaInformada;
 
-export default function LoggedScreen() {
+  if (!isAutorizado) {
+    console.log('Não autorizado');
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/',
+      },
+    };
+  }
+
+  console.log('Autorizado');
+  return {
+    props: {},
+  };
+}
+
+export default function LoggedScreen(props) {
   const router = useRouter();
   return (
     <Box
@@ -22,12 +45,13 @@ export default function LoggedScreen() {
       </Text>
 
       <Button
-        label='Logout'
+        label="Logout"
         onClick={() => {
-          router.push('/')
+          nookies.destroy('SENHA_SECRETA');
+          router.push('/');
         }}
-        colorVariant='neutral'
-        variant='secondary'
+        colorVariant="neutral"
+        variant="secondary"
       />
     </Box>
   );
