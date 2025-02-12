@@ -1,4 +1,4 @@
-# 📌 Tour pelo Next.js - Alura
+# 📚 Tour pelo Next.js - Alura
 
 This repository contains notes, code, and practical examples from a Next.js course that I completed. The course focused on essential concepts and intermediate features of the framework, providing a solid foundation for building structured and efficient applications.
 ## 🏗️ Course Topics
